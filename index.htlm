@@ -1,0 +1,181 @@
+<!-- UbiPet Ad Repository - Single file version for easy deployment -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UbiPet Ad</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f1f1c;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin: 0;
+    }
+
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 120px;
+    }
+
+    .cta {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #25d366;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 50px;
+      font-size: 1.2em;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <img src="img/logo.png" class="logo" />
+
+  <div class="slide active" style="background-image:url('img/slide1.jpg')">
+    <div class="overlay">
+      <h1>Tu mascota sale todos los días…</h1>
+    </div>
+  </div>
+
+  <div class="slide" style="background-image:url('img/slide2.jpg')">
+    <div class="overlay">
+      <h1>Pero basta un segundo para que se pierda.</h1>
+    </div>
+  </div>
+
+  <div class="slide" style="background-image:url('img/slide3.jpg')">
+    <div class="overlay">
+      <h1>Con UbiPet, quien la encuentre puede escanear su placa.</h1>
+    </div>
+  </div>
+
+  <div class="slide" style="background-image:url('img/slide4.jpg')">
+    <div class="overlay">
+      <h1>Y tú recibes su ubicación al instante.</h1>
+    </div>
+  </div>
+
+  <div class="slide" style="background-image:url('img/slide5.jpg')">
+    <div class="overlay">
+      <h1>UbiPet — Si se pierde, vuelve a casa.</h1>
+    </div>
+  </div>
+
+  <a class="cta" href="https://www.ubipet.shop">Conocer más</a>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+
+    setInterval(() => {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 3000);
+  </script>
+</body>
+</html>
+
+<!-- ================= SHORT VERSION (10s) ================= -->
+<!-- Save as: short.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UbiPet Ad Short</title>
+  <style>
+    body { margin:0; font-family:Arial; background:#0f1f1c; overflow:hidden; }
+    .slide { position:absolute; width:100vw; height:100vh; background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:white; text-align:center; opacity:0; transition:opacity .8s; }
+    .slide.active { opacity:1; }
+    .overlay { background:rgba(0,0,0,.6); padding:20px; border-radius:12px; }
+    h1 { font-size:2em; }
+  </style>
+</head>
+<body>
+  <div class="slide active" style="background-image:url('img/slide2.jpg')">
+    <div class="overlay"><h1>Tu mascota puede perderse en segundos</h1></div>
+  </div>
+  <div class="slide" style="background-image:url('img/slide3.jpg')">
+    <div class="overlay"><h1>UbiPet permite que la escaneen</h1></div>
+  </div>
+  <div class="slide" style="background-image:url('img/slide4.jpg')">
+    <div class="overlay"><h1>Y tú recibes su ubicación al instante</h1></div>
+  </div>
+<script>
+const slides=document.querySelectorAll('.slide');let c=0;setInterval(()=>{slides[c].classList.remove('active');c=(c+1)%slides.length;slides[c].classList.add('active');},3000);
+</script>
+</body>
+</html>
+
+<!-- ================= AGGRESSIVE VERSION ================= -->
+<!-- Save as: aggressive.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UbiPet Ad Aggressive</title>
+  <style>
+    body { margin:0; font-family:Arial; background:black; overflow:hidden; }
+    .slide { position:absolute; width:100vw; height:100vh; background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; color:white; text-align:center; opacity:0; transition:opacity .8s; }
+    .slide.active { opacity:1; }
+    .overlay { background:rgba(0,0,0,.7); padding:25px; border-radius:12px; }
+    h1 { font-size:2.2em; }
+  </style>
+</head>
+<body>
+  <div class="slide active" style="background-image:url('img/slide1.jpg')">
+    <div class="overlay"><h1>Si tu perro se pierde hoy…</h1></div>
+  </div>
+  <div class="slide" style="background-image:url('img/slide2.jpg')">
+    <div class="overlay"><h1>¿Alguien podría contactarte?</h1></div>
+  </div>
+  <div class="slide" style="background-image:url('img/slide3.jpg')">
+    <div class="overlay"><h1>UbiPet conecta a quien lo encuentre contigo</h1></div>
+  </div>
+  <div class="slide" style="background-image:url('img/slide5.jpg')">
+    <div class="overlay"><h1>No esperes a perderlo para protegerlo</h1></div>
+  </div>
+<script>
+const s=document.querySelectorAll('.slide');let i=0;setInterval(()=>{s[i].classList.remove('active');i=(i+1)%s.length;s[i].classList.add('active');},2500);
+</script>
+</body>
+</html>
