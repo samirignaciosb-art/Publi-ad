@@ -3,29 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UbiPet Ad</title>
+<title>UbiPet Ad Story</title>
 
 <style>
 body {
   margin: 0;
-  background: #1a1a1a; /* Un gris muy oscuro para resaltar el frame */
+  background: #1a1a1a;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Contenedor vertical 9:16 */
+/* Contenedor vertical 9:16 optimizado para Story */
 .container {
   position: relative;
   width: 100%;
-  max-width: 360px; /* Tamaño estándar de Story */
+  max-width: 360px; 
   height: 640px;
   overflow: hidden;
   background: #000;
-  border-radius: 15px; /* Bordes redondeados para el video */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 
 /* Slides */
@@ -39,7 +39,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
-  align-items: flex-end; /* Texto hacia abajo para no tapar la cara de Sofi */
+  align-items: flex-end; /* Texto abajo para lucir las fotos de Sofi */
   justify-content: center;
   color: white;
   text-align: center;
@@ -53,46 +53,30 @@ body {
   z-index: 2;
 }
 
-/* Oscurecer fondo solo detrás del texto para legibilidad */
+/* Overlay de gradiente para legibilidad del texto */
 .overlay {
-  background: linear-gradient(transparent, rgba(0,0,0,0.8));
-  padding: 60px 20px 80px 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
+  padding: 80px 25px 100px 25px; /* Espacio extra abajo para el sticker de IG */
   width: 100%;
   box-sizing: border-box;
 }
 
 h1 {
-  font-size: 1.6em;
-  line-height: 1.2;
+  font-size: 1.7em;
+  line-height: 1.25;
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  font-weight: 700;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
 }
 
-/* Logo con mayor visibilidad */
+/* Logo UbiPet */
 .logo {
   position: absolute;
-  top: 20px;
+  top: 25px;
   left: 20px;
-  width: 100px;
+  width: 110px;
   z-index: 10;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-}
-
-/* Botón CTA estilo WhatsApp */
-.cta {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #25d366;
-  color: white;
-  padding: 14px 28px;
-  border-radius: 50px;
-  font-size: 1.1em;
-  font-weight: bold;
-  text-decoration: none;
-  z-index: 10;
-  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
 }
 </style>
 </head>
@@ -133,19 +117,18 @@ h1 {
     </div>
   </div>
 
-  <a class="cta" href="https://www.ubipet.shop">¡Quiero mi placa!</a>
-
 </div>
 
 <script>
 const slides = document.querySelectorAll('.slide');
 let current = 0;
 
+// Rotación cada 3.8 segundos para una lectura cómoda
 setInterval(() => {
   slides[current].classList.remove('active');
   current = (current + 1) % slides.length;
   slides[current].classList.add('active');
-}, 3500); // 3.5 segundos para que dé tiempo de leer
+}, 3800);
 </script>
 
 </body>
