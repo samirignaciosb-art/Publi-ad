@@ -53,16 +53,17 @@
       top: 30%;
       width: 100%;
       height: 40%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      overflow: hidden;
     }
 
     .image-container img {
-      max-width: 90%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 20px;
+      position: absolute;
+      width: 100%;
+      height: auto;
+      left: 0;
+      top: 0;
+      cursor: grab;
+      transition: transform 0.1s;
     }
 
     /* LOGO */
@@ -109,7 +110,6 @@
       background: #ff9800;
     }
 
-    /* BORDE AL MOVER */
     .text:active {
       outline: 2px dashed white;
     }
@@ -120,14 +120,14 @@
 <body>
 
   <!-- STORY -->
-  <div class="story" id="story">
+  <div class="story">
 
     <div class="text" id="topText">
       <h1 id="textTop">No podemos evitar que se pierdan 🐾💔</h1>
     </div>
 
     <div class="image-container">
-      <img id="img" src="img/perro.jpeg">
+      <img id="img" src="img/perro.jpg">
     </div>
 
     <div class="text" id="bottomText">
@@ -159,6 +159,17 @@
     <label>Tamaño texto abajo</label>
     <input type="range" id="sizeBottom" min="30" max="120">
 
+    <hr>
+
+    <label>Zoom imagen</label>
+    <input type="range" id="imgSize" min="50" max="200" value="100">
+
+    <label>Posición X imagen</label>
+    <input type="range" id="imgX" min="-500" max="500" value="0">
+
+    <label>Posición Y imagen</label>
+    <input type="range" id="imgY" min="-500" max="500" value="0">
+
     <button onclick="aplicarCambios()">Aplicar</button>
 
     <button class="secondary" onclick="modoCaptura()">Modo captura 📸</button>
@@ -173,68 +184,83 @@
       if (bottom) document.getElementById("textBottom").innerText = bottom;
     }
 
-    // SLIDERS TAMAÑO
-    document.getElementById("sizeTop").addEventListener("input", (e) => {
+    // TAMAÑO TEXTO
+    document.getElementById("sizeTop").addEventListener("input", e => {
       document.getElementById("textTop").style.fontSize = e.target.value + "px";
     });
 
-    document.getElementById("sizeBottom").addEventListener("input", (e) => {
+    document.getElementById("sizeBottom").addEventListener("input", e => {
       document.getElementById("textBottom").style.fontSize = e.target.value + "px";
     });
 
     // SUBIR IMAGEN
-    document.getElementById("uploadImg").addEventListener("change", function(e) {
+    document.getElementById("uploadImg").addEventListener("change", e => {
       const file = e.target.files[0];
       if (file) {
-        const url = URL.createObjectURL(file);
-        document.getElementById("img").src = url;
+        document.getElementById("img").src = URL.createObjectURL(file);
       }
     });
 
-    // DRAG & DROP
+    // DRAG TEXTO
     function hacerMovible(el) {
       let offsetX = 0, offsetY = 0, isDragging = false;
 
-      el.addEventListener("mousedown", (e) => {
+      el.addEventListener("mousedown", e => {
         isDragging = true;
         offsetX = e.clientX - el.offsetLeft;
         offsetY = e.clientY - el.offsetTop;
-        el.style.cursor = "grabbing";
       });
 
-      document.addEventListener("mousemove", (e) => {
+      document.addEventListener("mousemove", e => {
         if (!isDragging) return;
         el.style.left = (e.clientX - offsetX) + "px";
         el.style.top = (e.clientY - offsetY) + "px";
       });
 
-      document.addEventListener("mouseup", () => {
-        isDragging = false;
-        el.style.cursor = "grab";
-      });
+      document.addEventListener("mouseup", () => isDragging = false);
 
-      // MOBILE
-      el.addEventListener("touchstart", (e) => {
+      el.addEventListener("touchstart", e => {
         isDragging = true;
-        const touch = e.touches[0];
-        offsetX = touch.clientX - el.offsetLeft;
-        offsetY = touch.clientY - el.offsetTop;
+        const t = e.touches[0];
+        offsetX = t.clientX - el.offsetLeft;
+        offsetY = t.clientY - el.offsetTop;
       });
 
-      document.addEventListener("touchmove", (e) => {
+      document.addEventListener("touchmove", e => {
         if (!isDragging) return;
-        const touch = e.touches[0];
-        el.style.left = (touch.clientX - offsetX) + "px";
-        el.style.top = (touch.clientY - offsetY) + "px";
+        const t = e.touches[0];
+        el.style.left = (t.clientX - offsetX) + "px";
+        el.style.top = (t.clientY - offsetY) + "px";
       });
 
-      document.addEventListener("touchend", () => {
-        isDragging = false;
-      });
+      document.addEventListener("touchend", () => isDragging = false);
     }
 
     hacerMovible(document.getElementById("topText"));
     hacerMovible(document.getElementById("bottomText"));
+
+    // CONTROL IMAGEN
+    const img = document.getElementById("img");
+    let scale = 1, posX = 0, posY = 0;
+
+    function actualizarImagen() {
+      img.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+    }
+
+    document.getElementById("imgSize").addEventListener("input", e => {
+      scale = e.target.value / 100;
+      actualizarImagen();
+    });
+
+    document.getElementById("imgX").addEventListener("input", e => {
+      posX = e.target.value;
+      actualizarImagen();
+    });
+
+    document.getElementById("imgY").addEventListener("input", e => {
+      posY = e.target.value;
+      actualizarImagen();
+    });
 
     // MODO CAPTURA
     function modoCaptura() {
