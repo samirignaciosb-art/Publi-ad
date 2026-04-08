@@ -22,48 +22,61 @@
     .story {
       width: 1080px;
       height: 1920px;
-      background-color: #f5f1eb;
       position: relative;
       overflow: hidden;
       margin: auto;
+      background: #000;
     }
 
-    h1, h2 {
-      text-shadow: 0px 4px 20px rgba(0,0,0,0.7);
-      text-align: center;
-    }
-
-    h1 { font-size: 64px; }
-    h2 { font-size: 56px; }
-
-    /* TEXTOS MOVIBLES */
-    .text {
-      position: absolute;
-      width: 100%;
-      cursor: grab;
-      padding: 0 40px;
-    }
-
-    #topText { top: 200px; }
-    #bottomText { top: 1400px; }
-
-    /* IMAGEN */
+    /* IMAGEN FONDO */
     .image-container {
       position: absolute;
-      top: 30%;
       width: 100%;
-      height: 40%;
+      height: 100%;
       overflow: hidden;
     }
 
     .image-container img {
       position: absolute;
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
       left: 0;
       top: 0;
-      cursor: grab;
       transition: transform 0.1s;
+    }
+
+    /* OVERLAY OSCURO */
+    .image-container::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.35);
+    }
+
+    /* TEXTOS */
+    h1, h2 {
+      text-shadow: 0px 4px 20px rgba(0,0,0,0.9);
+      text-align: center;
+    }
+
+    h1 { font-size: 64px; }
+    h2 { font-size: 56px; }
+
+    .text {
+      position: absolute;
+      width: 100%;
+      cursor: grab;
+      padding: 0 40px;
+      z-index: 2;
+    }
+
+    #topText { top: 200px; }
+    #bottomText { top: 1400px; }
+
+    .text:active {
+      outline: 2px dashed white;
     }
 
     /* LOGO */
@@ -72,6 +85,7 @@
       bottom: 60px;
       width: 100%;
       text-align: center;
+      z-index: 2;
     }
 
     .logo img {
@@ -88,6 +102,7 @@
       top: 0;
       height: 100%;
       overflow: auto;
+      z-index: 10;
     }
 
     .panel input {
@@ -110,10 +125,6 @@
       background: #ff9800;
     }
 
-    .text:active {
-      outline: 2px dashed white;
-    }
-
   </style>
 </head>
 
@@ -122,18 +133,22 @@
   <!-- STORY -->
   <div class="story">
 
-    <div class="text" id="topText">
-      <h1 id="textTop">No podemos evitar que se pierdan 🐾💔</h1>
-    </div>
-
+    <!-- FONDO -->
     <div class="image-container">
       <img id="img" src="img/perro.jpg">
     </div>
 
+    <!-- TEXTO ARRIBA -->
+    <div class="text" id="topText">
+      <h1 id="textTop">No podemos evitar que se pierdan 🐾💔</h1>
+    </div>
+
+    <!-- TEXTO ABAJO -->
     <div class="text" id="bottomText">
       <h2 id="textBottom">Pero sí ayudarlos a volver ❤️</h2>
     </div>
 
+    <!-- LOGO -->
     <div class="logo">
       <img src="img/logo.png">
     </div>
