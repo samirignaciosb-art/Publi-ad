@@ -17,59 +17,68 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background: #111; /* fondo negro fuera de la historia */
+      background: #111;
     }
 
-    /* CONTENEDOR STORY */
+    /* CONTENEDOR PRINCIPAL */
     .story {
       width: 1080px;
       height: 1920px;
-      position: relative;
-      overflow: hidden;
+      background-color: #f5f1eb; /* beige UbiPet */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 80px 60px;
+    }
+
+    /* TEXTO SUPERIOR */
+    .text-top {
+      text-align: center;
+      color: #ffffff;
+      width: 100%;
+    }
+
+    .text-top h1 {
+      font-size: 64px;
+      line-height: 1.3;
+      text-shadow: 0px 4px 20px rgba(0,0,0,0.6);
+    }
+
+    /* CONTENEDOR IMAGEN */
+    .image-container {
+      width: 100%;
+      height: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain; /* 👈 NO se corta */
       border-radius: 20px;
     }
 
-    /* IMAGEN DE FONDO */
-    .story img.bg {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(65%);
-    }
-
-    /* TEXTO PRINCIPAL */
-    .text {
-      position: absolute;
-      top: 25%;
-      width: 100%;
+    /* TEXTO INFERIOR (REMATE) */
+    .text-bottom {
       text-align: center;
-      color: white;
-      padding: 0 80px;
+      color: #ffffff;
     }
 
-    .text h1 {
-      font-size: 64px;
-      line-height: 1.3;
-      text-shadow: 0px 4px 20px rgba(0,0,0,0.8);
-    }
-
-    /* REMATE (segunda línea) */
-    .text .highlight {
-      display: block;
-      margin-top: 40px;
-      font-size: 58px;
+    .text-bottom h2 {
+      font-size: 56px;
+      text-shadow: 0px 4px 20px rgba(0,0,0,0.6);
     }
 
     /* LOGO */
     .logo {
-      position: absolute;
-      bottom: 80px;
-      width: 100%;
-      text-align: center;
+      margin-top: 40px;
     }
 
     .logo img {
-      width: 220px;
+      width: 200px;
     }
 
   </style>
@@ -79,20 +88,29 @@
 
   <div class="story">
 
-    <!-- CAMBIA ESTA IMAGEN -->
-    <img src="img/perro.jpg" class="bg">
-
-    <div class="text">
-      <!-- CAMBIA ESTE TEXTO -->
+    <!-- TEXTO ARRIBA -->
+    <div class="text-top">
       <h1>
-        No podemos evitar que se pierdan…
-        <span class="highlight">pero sí ayudarlos a volver 🐾</span>
+        No podemos evitar que se pierdan 🐾💔
       </h1>
     </div>
 
-    <div class="logo">
-      <!-- TU LOGO -->
-      <img src="img/logo.png">
+    <!-- IMAGEN -->
+    <div class="image-container">
+      <!-- CAMBIA ESTA IMAGEN -->
+      <img src="img/perro.jpg" alt="Mascota">
+    </div>
+
+    <!-- TEXTO ABAJO -->
+    <div class="text-bottom">
+      <h2>
+        Pero sí ayudarlos a volver ❤️
+      </h2>
+
+      <!-- LOGO -->
+      <div class="logo">
+        <img src="img/logo.png" alt="UbiPet">
+      </div>
     </div>
 
   </div>
