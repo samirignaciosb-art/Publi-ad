@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>UbiPet Story</title>
+  <title>UbiPet Story Editor</title>
 
   <style>
     * {
@@ -14,71 +14,79 @@
 
     body {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       background: #111;
+      color: white;
     }
 
-    /* CONTENEDOR PRINCIPAL */
+    /* STORY */
     .story {
       width: 1080px;
       height: 1920px;
-      background-color: #f5f1eb; /* beige UbiPet */
+      background-color: #f5f1eb;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
       padding: 80px 60px;
+      margin: auto;
     }
 
-    /* TEXTO SUPERIOR */
-    .text-top {
+    .text-top, .text-bottom {
       text-align: center;
-      color: #ffffff;
       width: 100%;
+      position: relative;
     }
 
-    .text-top h1 {
-      font-size: 64px;
-      line-height: 1.3;
+    h1, h2 {
       text-shadow: 0px 4px 20px rgba(0,0,0,0.6);
     }
 
-    /* CONTENEDOR IMAGEN */
+    h1 { font-size: 64px; }
+    h2 { font-size: 56px; }
+
     .image-container {
-      width: 100%;
       height: 50%;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
     }
 
     .image-container img {
       max-width: 100%;
       max-height: 100%;
-      object-fit: contain; /* 👈 NO se corta */
+      object-fit: contain;
       border-radius: 20px;
-    }
-
-    /* TEXTO INFERIOR (REMATE) */
-    .text-bottom {
-      text-align: center;
-      color: #ffffff;
-    }
-
-    .text-bottom h2 {
-      font-size: 56px;
-      text-shadow: 0px 4px 20px rgba(0,0,0,0.6);
-    }
-
-    /* LOGO */
-    .logo {
-      margin-top: 40px;
     }
 
     .logo img {
       width: 200px;
+    }
+
+    /* PANEL */
+    .panel {
+      width: 300px;
+      padding: 20px;
+      background: #222;
+      position: fixed;
+      right: 0;
+      top: 0;
+      height: 100%;
+      overflow: auto;
+    }
+
+    .panel input, .panel select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+
+    .panel button {
+      width: 100%;
+      padding: 10px;
+      background: #4CAF50;
+      border: none;
+      color: white;
+      cursor: pointer;
     }
 
   </style>
@@ -86,34 +94,66 @@
 
 <body>
 
+  <!-- STORY -->
   <div class="story">
 
-    <!-- TEXTO ARRIBA -->
-    <div class="text-top">
-      <h1>
-        No podemos evitar que se pierdan 🐾💔
-      </h1>
+    <div class="text-top" id="topText">
+      <h1 id="textTop">No podemos evitar que se pierdan 🐾💔</h1>
     </div>
 
-    <!-- IMAGEN -->
     <div class="image-container">
-      <!-- CAMBIA ESTA IMAGEN -->
-      <img src="img/perro.jpeg" alt="Mascota">
+      <img id="img" src="img/perro.jpg">
     </div>
 
-    <!-- TEXTO ABAJO -->
-    <div class="text-bottom">
-      <h2>
-        Pero sí ayudarlos a volver ❤️
-      </h2>
+    <div class="text-bottom" id="bottomText">
+      <h2 id="textBottom">Pero sí ayudarlos a volver ❤️</h2>
 
-      <!-- LOGO -->
       <div class="logo">
-        <img src="img/logo.png" alt="UbiPet">
+        <img src="img/logo.png">
       </div>
     </div>
 
   </div>
+
+  <!-- PANEL EDITOR -->
+  <div class="panel">
+    <h3>Editor UbiPet</h3>
+
+    <label>Texto arriba</label>
+    <input type="text" id="inputTop">
+
+    <label>Texto abajo</label>
+    <input type="text" id="inputBottom">
+
+    <label>Posición texto arriba</label>
+    <select id="posTop">
+      <option value="flex-start">Arriba</option>
+      <option value="center">Centro</option>
+      <option value="flex-end">Abajo</option>
+    </select>
+
+    <label>Posición texto abajo</label>
+    <select id="posBottom">
+      <option value="flex-start">Arriba</option>
+      <option value="center">Centro</option>
+      <option value="flex-end">Abajo</option>
+    </select>
+
+    <button onclick="aplicarCambios()">Aplicar</button>
+  </div>
+
+  <script>
+    function aplicarCambios() {
+      const top = document.getElementById("inputTop").value;
+      const bottom = document.getElementById("inputBottom").value;
+
+      if (top) document.getElementById("textTop").innerText = top;
+      if (bottom) document.getElementById("textBottom").innerText = bottom;
+
+      document.getElementById("topText").style.justifyContent = document.getElementById("posTop").value;
+      document.getElementById("bottomText").style.justifyContent = document.getElementById("posBottom").value;
+    }
+  </script>
 
 </body>
 </html>
