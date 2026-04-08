@@ -1,38 +1,101 @@
-export const post = {
-  id: "ubipet_historia_emocional_01",
-  tipo: "historia",
-  formato: "imagen_texto",
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>UbiPet Story</title>
 
-  contenido: {
-    texto_principal: `No podemos evitar que se pierdan…
-
-pero sí ayudarlos a volver 🐾`,
-
-    marca: "UbiPet"
-  },
-
-  diseño: {
-    fondo: "beige",
-    imagen: "perro_solo_calle", // nombre del asset
-    overlay_opacidad: 0.3,
-
-    tipografia: {
-      familia: "serif",
-      color: "#FFFFFF",
-      alineacion: "center"
-    },
-
-    logo: {
-      posicion: "abajo_centro",
-      tamaño: "medio",
-      variante: "color"
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Georgia", serif;
     }
-  },
 
-  copy_instagram: `No podemos evitar que se pierdan… pero sí ayudarlos a volver 🐾  
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111; /* fondo negro fuera de la historia */
+    }
 
-#UbiPet #MascotasChile #TenenciaResponsable #PerrosChile #GatosChile`,
+    /* CONTENEDOR STORY */
+    .story {
+      width: 1080px;
+      height: 1920px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+    }
 
-  objetivo: "emocional_branding",
-  call_to_action: "implícito"
-};
+    /* IMAGEN DE FONDO */
+    .story img.bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(65%);
+    }
+
+    /* TEXTO PRINCIPAL */
+    .text {
+      position: absolute;
+      top: 25%;
+      width: 100%;
+      text-align: center;
+      color: white;
+      padding: 0 80px;
+    }
+
+    .text h1 {
+      font-size: 64px;
+      line-height: 1.3;
+      text-shadow: 0px 4px 20px rgba(0,0,0,0.8);
+    }
+
+    /* REMATE (segunda línea) */
+    .text .highlight {
+      display: block;
+      margin-top: 40px;
+      font-size: 58px;
+    }
+
+    /* LOGO */
+    .logo {
+      position: absolute;
+      bottom: 80px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .logo img {
+      width: 220px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="story">
+
+    <!-- CAMBIA ESTA IMAGEN -->
+    <img src="img/perro.jpg" class="bg">
+
+    <div class="text">
+      <!-- CAMBIA ESTE TEXTO -->
+      <h1>
+        No podemos evitar que se pierdan…
+        <span class="highlight">pero sí ayudarlos a volver 🐾</span>
+      </h1>
+    </div>
+
+    <div class="logo">
+      <!-- TU LOGO -->
+      <img src="img/logo.png">
+    </div>
+
+  </div>
+
+</body>
+</html>
