@@ -1,288 +1,180 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>UbiPet Story Tool</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UbiPet</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Georgia", serif;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: white;
+}
 
-    body {
-      display: flex;
-      background: #111;
-      color: white;
-    }
+/* HERO */
+.hero {
+  height: 100vh;
+  background: url('img/fondo.jpg') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
 
-    /* STORY */
-    .story {
-      width: 1080px;
-      height: 1920px;
-      position: relative;
-      overflow: hidden;
-      margin: auto;
-      background: #000;
-    }
+.overlay {
+  background: rgba(0,0,0,0.6);
+  padding: 25px;
+  border-radius: 12px;
+}
 
-    /* IMAGEN FONDO */
-    .image-container {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
+/* PREVIEW */
+#preview {
+  padding: 30px 20px;
+  max-width: 600px;
+  margin: auto;
+  line-height: 1.6;
+  font-size: 18px;
+}
 
-    .image-container img {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      left: 0;
-      top: 0;
-      transition: transform 0.1s;
-    }
+/* BOTÓN DISCRETO */
+.toggle-btn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: rgba(0,0,0,0.3);
+  border: none;
+  color: white;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 999;
+  font-size: 12px;
+  opacity: 0.6;
+}
 
-    /* OVERLAY OSCURO */
-    .image-container::after {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.35);
-    }
+/* PANEL */
+.panel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 350px;
+  height: 100%;
+  background: #fff;
+  color: #000;
+  transition: 0.3s;
+  z-index: 998;
+  display: flex;
+  flex-direction: column;
+}
 
-    /* TEXTOS */
-    h1, h2 {
-      text-shadow: 0px 4px 20px rgba(0,0,0,0.9);
-      text-align: center;
-    }
+.panel.open {
+  right: 0;
+}
 
-    h1 { font-size: 64px; }
-    h2 { font-size: 56px; }
+.panel-content {
+  padding: 15px;
+  overflow-y: auto;
+  flex: 1;
+}
 
-    .text {
-      position: absolute;
-      width: 100%;
-      cursor: grab;
-      padding: 0 40px;
-      z-index: 2;
-    }
+/* EDITOR */
+#editor {
+  min-height: 250px;
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 8px;
+  outline: none;
+}
 
-    #topText { top: 200px; }
-    #bottomText { top: 1400px; }
+/* BOTONES */
+.panel button {
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: bold;
+}
 
-    .text:active {
-      outline: 2px dashed white;
-    }
+.save { background: #28a745; color: white; }
+.clear { background: #dc3545; color: white; }
 
-    /* LOGO */
-    .logo {
-      position: absolute;
-      bottom: 60px;
-      width: 100%;
-      text-align: center;
-      z-index: 2;
-    }
-
-    .logo img {
-      width: 200px;
-    }
-
-    /* PANEL */
-    .panel {
-      width: 300px;
-      padding: 20px;
-      background: #222;
-      position: fixed;
-      right: 0;
-      top: 0;
-      height: 100%;
-      overflow: auto;
-      z-index: 10;
-    }
-
-    .panel input {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 8px;
-    }
-
-    .panel button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      background: #4CAF50;
-      border: none;
-      color: white;
-      cursor: pointer;
-    }
-
-    .panel .secondary {
-      background: #ff9800;
-    }
-
-  </style>
+</style>
 </head>
 
 <body>
 
-  <!-- STORY -->
-  <div class="story">
-
-    <!-- FONDO -->
-    <div class="image-container">
-      <img id="img" src="img/perro.jpg">
-    </div>
-
-    <!-- TEXTO ARRIBA -->
-    <div class="text" id="topText">
-      <h1 id="textTop">No podemos evitar que se pierdan 🐾💔</h1>
-    </div>
-
-    <!-- TEXTO ABAJO -->
-    <div class="text" id="bottomText">
-      <h2 id="textBottom">Pero sí ayudarlos a volver ❤️</h2>
-    </div>
-
-    <!-- LOGO -->
-    <div class="logo">
-      <img src="img/logo.png">
-    </div>
-
+<!-- HERO -->
+<div class="hero">
+  <div class="overlay">
+    <h1>No es solo un QR</h1>
+    <p>Es su forma de volver a casa 🐾</p>
   </div>
+</div>
 
-  <!-- PANEL -->
-  <div class="panel" id="panel">
+<!-- CONTENIDO -->
+<div id="preview"></div>
+
+<!-- BOTÓN OCULTO -->
+<button class="toggle-btn" onclick="togglePanel()">✏️</button>
+
+<!-- PANEL EDITOR -->
+<div class="panel" id="panel">
+  <div class="panel-content">
+
     <h3>Editor UbiPet</h3>
 
-    <label>Texto arriba</label>
-    <input type="text" id="inputTop">
+    <div id="editor" contenteditable="true"></div>
 
-    <label>Texto abajo</label>
-    <input type="text" id="inputBottom">
+    <button class="save" onclick="guardar()">Guardar</button>
+    <button class="clear" onclick="limpiar()">Limpiar</button>
 
-    <label>Subir imagen</label>
-    <input type="file" id="uploadImg">
-
-    <label>Tamaño texto arriba</label>
-    <input type="range" id="sizeTop" min="30" max="120">
-
-    <label>Tamaño texto abajo</label>
-    <input type="range" id="sizeBottom" min="30" max="120">
-
-    <hr>
-
-    <label>Zoom imagen</label>
-    <input type="range" id="imgSize" min="50" max="200" value="100">
-
-    <label>Posición X imagen</label>
-    <input type="range" id="imgX" min="-500" max="500" value="0">
-
-    <label>Posición Y imagen</label>
-    <input type="range" id="imgY" min="-500" max="500" value="0">
-
-    <button onclick="aplicarCambios()">Aplicar</button>
-
-    <button class="secondary" onclick="modoCaptura()">Modo captura 📸</button>
   </div>
+</div>
 
-  <script>
-    function aplicarCambios() {
-      const top = document.getElementById("inputTop").value;
-      const bottom = document.getElementById("inputBottom").value;
+<script>
 
-      if (top) document.getElementById("textTop").innerText = top;
-      if (bottom) document.getElementById("textBottom").innerText = bottom;
-    }
+// ELEMENTOS
+const editor = document.getElementById("editor");
+const preview = document.getElementById("preview");
 
-    // TAMAÑO TEXTO
-    document.getElementById("sizeTop").addEventListener("input", e => {
-      document.getElementById("textTop").style.fontSize = e.target.value + "px";
-    });
+// ABRIR / CERRAR PANEL
+function togglePanel() {
+  document.getElementById("panel").classList.toggle("open");
+}
 
-    document.getElementById("sizeBottom").addEventListener("input", e => {
-      document.getElementById("textBottom").style.fontSize = e.target.value + "px";
-    });
+// ACTUALIZAR EN VIVO
+editor.addEventListener("input", () => {
+  preview.innerHTML = editor.innerHTML;
+});
 
-    // SUBIR IMAGEN
-    document.getElementById("uploadImg").addEventListener("change", e => {
-      const file = e.target.files[0];
-      if (file) {
-        document.getElementById("img").src = URL.createObjectURL(file);
-      }
-    });
+// GUARDAR
+function guardar() {
+  localStorage.setItem("ubipet_content", editor.innerHTML);
+}
 
-    // DRAG TEXTO
-    function hacerMovible(el) {
-      let offsetX = 0, offsetY = 0, isDragging = false;
+// CARGAR
+window.onload = () => {
+  const data = localStorage.getItem("ubipet_content");
+  if (data) {
+    editor.innerHTML = data;
+    preview.innerHTML = data;
+  }
+}
 
-      el.addEventListener("mousedown", e => {
-        isDragging = true;
-        offsetX = e.clientX - el.offsetLeft;
-        offsetY = e.clientY - el.offsetTop;
-      });
+// LIMPIAR
+function limpiar() {
+  if(confirm("¿Borrar todo?")) {
+    editor.innerHTML = "";
+    preview.innerHTML = "";
+    localStorage.removeItem("ubipet_content");
+  }
+}
 
-      document.addEventListener("mousemove", e => {
-        if (!isDragging) return;
-        el.style.left = (e.clientX - offsetX) + "px";
-        el.style.top = (e.clientY - offsetY) + "px";
-      });
-
-      document.addEventListener("mouseup", () => isDragging = false);
-
-      el.addEventListener("touchstart", e => {
-        isDragging = true;
-        const t = e.touches[0];
-        offsetX = t.clientX - el.offsetLeft;
-        offsetY = t.clientY - el.offsetTop;
-      });
-
-      document.addEventListener("touchmove", e => {
-        if (!isDragging) return;
-        const t = e.touches[0];
-        el.style.left = (t.clientX - offsetX) + "px";
-        el.style.top = (t.clientY - offsetY) + "px";
-      });
-
-      document.addEventListener("touchend", () => isDragging = false);
-    }
-
-    hacerMovible(document.getElementById("topText"));
-    hacerMovible(document.getElementById("bottomText"));
-
-    // CONTROL IMAGEN
-    const img = document.getElementById("img");
-    let scale = 1, posX = 0, posY = 0;
-
-    function actualizarImagen() {
-      img.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
-    }
-
-    document.getElementById("imgSize").addEventListener("input", e => {
-      scale = e.target.value / 100;
-      actualizarImagen();
-    });
-
-    document.getElementById("imgX").addEventListener("input", e => {
-      posX = e.target.value;
-      actualizarImagen();
-    });
-
-    document.getElementById("imgY").addEventListener("input", e => {
-      posY = e.target.value;
-      actualizarImagen();
-    });
-
-    // MODO CAPTURA
-    function modoCaptura() {
-      document.getElementById("panel").style.display = "none";
-      document.body.style.background = "#000";
-    }
-  </script>
+</script>
 
 </body>
 </html>
