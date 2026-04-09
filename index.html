@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UbiPet</title>
+<title>UbiPet Creator</title>
 
 <style>
 body {
@@ -11,48 +11,43 @@ body {
   font-family: Arial, sans-serif;
   background: #000;
   color: white;
+  overflow: hidden;
 }
 
 /* HERO */
 .hero {
+  width: 100vw;
   height: 100vh;
-  background: url('img/fondo.jpg') center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 20px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
 }
 
-.overlay {
-  background: rgba(0,0,0,0.6);
-  padding: 25px;
-  border-radius: 12px;
-}
-
-/* PREVIEW */
+/* TEXTO */
 #preview {
-  padding: 30px 20px;
-  max-width: 600px;
-  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  max-width: 85%;
+  text-align: center;
+  font-size: 22px;
   line-height: 1.6;
-  font-size: 18px;
+  user-select: none;
 }
 
-/* BOTÓN DISCRETO */
+/* BOTÓN PANEL */
 .toggle-btn {
   position: fixed;
-  top: 15px;
-  right: 15px;
-  background: rgba(0,0,0,0.3);
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.4);
   border: none;
   color: white;
   padding: 6px 8px;
   border-radius: 6px;
-  cursor: pointer;
   z-index: 999;
-  font-size: 12px;
-  opacity: 0.6;
 }
 
 /* PANEL */
@@ -60,7 +55,7 @@ body {
   position: fixed;
   top: 0;
   right: -100%;
-  width: 350px;
+  width: 320px;
   height: 100%;
   background: #fff;
   color: #000;
@@ -70,19 +65,16 @@ body {
   flex-direction: column;
 }
 
-.panel.open {
-  right: 0;
-}
+.panel.open { right: 0; }
 
 .panel-content {
-  padding: 15px;
+  padding: 12px;
   overflow-y: auto;
-  flex: 1;
 }
 
 /* EDITOR */
 #editor {
-  min-height: 250px;
+  min-height: 180px;
   background: #f5f5f5;
   padding: 10px;
   border-radius: 8px;
@@ -90,44 +82,44 @@ body {
 }
 
 /* BOTONES */
-.panel button {
-  margin-top: 10px;
+button {
+  margin-top: 8px;
   padding: 10px;
   border: none;
-  cursor: pointer;
   border-radius: 6px;
+  cursor: pointer;
   font-weight: bold;
 }
 
 .save { background: #28a745; color: white; }
 .clear { background: #dc3545; color: white; }
+.template { background: #007bff; color: white; }
+
+/* INPUT */
+input { margin-top: 8px; }
 
 </style>
 </head>
 
 <body>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="overlay">
-    <h1>No es solo un QR</h1>
-    <p>Es su forma de volver a casa 🐾</p>
-  </div>
+<div class="hero" id="hero">
+  <div id="preview"></div>
 </div>
 
-<!-- CONTENIDO -->
-<div id="preview"></div>
-
-<!-- BOTÓN OCULTO -->
 <button class="toggle-btn" onclick="togglePanel()">✏️</button>
 
-<!-- PANEL EDITOR -->
 <div class="panel" id="panel">
   <div class="panel-content">
 
-    <h3>Editor UbiPet</h3>
+    <h3>Editor</h3>
 
     <div id="editor" contenteditable="true"></div>
+
+    <button class="template" onclick="plantilla1()">Hook Viral</button>
+    <button class="template" onclick="plantilla2()">Venta Directa</button>
+
+    <input type="file" id="imgUpload" accept="image/*">
 
     <button class="save" onclick="guardar()">Guardar</button>
     <button class="clear" onclick="limpiar()">Limpiar</button>
@@ -137,42 +129,117 @@ body {
 
 <script>
 
-// ELEMENTOS
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
+const hero = document.getElementById("hero");
+const imgUpload = document.getElementById("imgUpload");
 
-// ABRIR / CERRAR PANEL
+// PANEL
 function togglePanel() {
   document.getElementById("panel").classList.toggle("open");
 }
 
-// ACTUALIZAR EN VIVO
+// TEXTO EN VIVO
 editor.addEventListener("input", () => {
   preview.innerHTML = editor.innerHTML;
 });
 
+// PLANTILLAS
+function plantilla1() {
+editor.innerHTML = `Se pierde…
+
+Lo encuentran
+
+Pero no vuelve
+
+
+¿Por qué?`;
+preview.innerHTML = editor.innerHTML;
+}
+
+function plantilla2() {
+editor.innerHTML = `No es un QR
+
+Es su forma de volver a casa 🐾`;
+preview.innerHTML = editor.innerHTML;
+}
+
 // GUARDAR
 function guardar() {
-  localStorage.setItem("ubipet_content", editor.innerHTML);
+  localStorage.setItem("text", editor.innerHTML);
+  localStorage.setItem("posX", preview.style.left);
+  localStorage.setItem("posY", preview.style.top);
 }
 
 // CARGAR
 window.onload = () => {
-  const data = localStorage.getItem("ubipet_content");
-  if (data) {
-    editor.innerHTML = data;
-    preview.innerHTML = data;
+  preview.innerHTML = localStorage.getItem("text") || "";
+  editor.innerHTML = preview.innerHTML;
+
+  const bg = localStorage.getItem("bg");
+  if (bg) hero.style.backgroundImage = `url(${bg})`;
+
+  const x = localStorage.getItem("posX");
+  const y = localStorage.getItem("posY");
+
+  if (x && y) {
+    preview.style.left = x;
+    preview.style.top = y;
+    preview.style.transform = "none";
   }
-}
+};
 
 // LIMPIAR
 function limpiar() {
   if(confirm("¿Borrar todo?")) {
-    editor.innerHTML = "";
     preview.innerHTML = "";
-    localStorage.removeItem("ubipet_content");
+    editor.innerHTML = "";
+    localStorage.clear();
   }
 }
+
+// IMAGEN
+imgUpload.addEventListener("change", e => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = ev => {
+    hero.style.backgroundImage = `url(${ev.target.result})`;
+    localStorage.setItem("bg", ev.target.result);
+  };
+
+  reader.readAsDataURL(file);
+});
+
+// DRAG (MOUSE + TOUCH FIX 🔥)
+let isDragging = false;
+
+function startDrag(e) {
+  isDragging = true;
+}
+
+function stopDrag() {
+  isDragging = false;
+}
+
+function moveDrag(e) {
+  if (!isDragging) return;
+
+  let x = e.clientX || e.touches[0].clientX;
+  let y = e.clientY || e.touches[0].clientY;
+
+  preview.style.left = x + "px";
+  preview.style.top = y + "px";
+  preview.style.transform = "none";
+}
+
+preview.addEventListener("mousedown", startDrag);
+document.addEventListener("mouseup", stopDrag);
+document.addEventListener("mousemove", moveDrag);
+
+preview.addEventListener("touchstart", startDrag);
+document.addEventListener("touchend", stopDrag);
+document.addEventListener("touchmove", moveDrag);
 
 </script>
 
