@@ -3,24 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UbiPet Creator</title>
+<title>UbiPet Creator PRO</title>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #000;
-  color: white;
+  font-family: Arial;
+  background: black;
+}
+
+/* CANVAS */
+#canvas {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
   overflow: hidden;
 }
 
-/* HERO */
+/* FONDO */
 .hero {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-position: center;
-  position: relative;
 }
 
 /* TEXTO */
@@ -29,102 +36,102 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
   cursor: grab;
   max-width: 85%;
-  text-align: center;
-  font-size: 22px;
-  line-height: 1.6;
-  user-select: none;
+  line-height: 1.5;
+  font-size: 28px;
+  text-shadow: 0 3px 12px rgba(0,0,0,0.9);
 }
 
-/* BOTÓN PANEL */
-.toggle-btn {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background: rgba(0,0,0,0.4);
-  border: none;
-  color: white;
-  padding: 6px 8px;
-  border-radius: 6px;
-  z-index: 999;
+/* LOGO */
+#logo {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 120px;
 }
 
 /* PANEL */
 .panel {
   position: fixed;
-  top: 0;
   right: -100%;
+  top: 0;
   width: 320px;
   height: 100%;
-  background: #fff;
-  color: #000;
+  background: white;
   transition: 0.3s;
-  z-index: 998;
-  display: flex;
-  flex-direction: column;
+  padding: 10px;
+  overflow-y: auto;
 }
 
 .panel.open { right: 0; }
 
-.panel-content {
-  padding: 12px;
-  overflow-y: auto;
+.toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
 }
 
 /* EDITOR */
 #editor {
-  min-height: 180px;
-  background: #f5f5f5;
+  min-height: 120px;
+  background: #eee;
   padding: 10px;
-  border-radius: 8px;
-  outline: none;
 }
 
-/* BOTONES */
-button {
+/* CONTROLES */
+input, button {
+  width: 100%;
   margin-top: 8px;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
+  padding: 8px;
 }
-
-.save { background: #28a745; color: white; }
-.clear { background: #dc3545; color: white; }
-.template { background: #007bff; color: white; }
-
-/* INPUT */
-input { margin-top: 8px; }
 
 </style>
 </head>
 
 <body>
 
-<div class="hero" id="hero">
+<div id="canvas">
+  <div class="hero" id="hero"></div>
   <div id="preview"></div>
+  <img id="logo">
 </div>
 
-<button class="toggle-btn" onclick="togglePanel()">✏️</button>
+<button class="toggle" onclick="toggle()">⚙️</button>
 
 <div class="panel" id="panel">
-  <div class="panel-content">
 
-    <h3>Editor</h3>
+<h3>Editor</h3>
 
-    <div id="editor" contenteditable="true"></div>
+<div id="editor" contenteditable="true"></div>
 
-    <button class="template" onclick="plantilla1()">Hook Viral</button>
-    <button class="template" onclick="plantilla2()">Venta Directa</button>
+<label>Tamaño texto</label>
+<input type="range" min="18" max="70" value="28" id="fontSize">
 
-    <input type="file" id="imgUpload" accept="image/*">
+<button onclick="toggleBold()">Negrita</button>
 
-    <button class="save" onclick="guardar()">Guardar</button>
-    <button class="clear" onclick="limpiar()">Limpiar</button>
+<label>Zoom fondo</label>
+<input type="range" min="100" max="200" value="100" id="zoom">
 
-  </div>
+<label>Posición fondo</label>
+<input type="range" min="0" max="100" value="50" id="bgY">
+
+<h4>Logo</h4>
+<input type="file" id="logoUpload">
+<label>Tamaño logo</label>
+<input type="range" min="50" max="300" value="120" id="logoSize">
+
+<input type="file" id="imgUpload">
+
+<button onclick="descargar()">📸 Descargar imagen</button>
+
+<button onclick="guardar()">Guardar</button>
+<button onclick="limpiar()">Limpiar</button>
+
 </div>
 
 <script>
@@ -132,43 +139,79 @@ input { margin-top: 8px; }
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
 const hero = document.getElementById("hero");
-const imgUpload = document.getElementById("imgUpload");
+const logo = document.getElementById("logo");
 
 // PANEL
-function togglePanel() {
-  document.getElementById("panel").classList.toggle("open");
+function toggle() {
+  panel.classList.toggle("open");
 }
 
-// TEXTO EN VIVO
-editor.addEventListener("input", () => {
-  preview.innerHTML = editor.innerHTML;
-});
+// TEXTO
+editor.oninput = () => preview.innerHTML = editor.innerHTML;
 
-// PLANTILLAS
-function plantilla1() {
-editor.innerHTML = `Se pierde…
+// TAMAÑO TEXTO
+fontSize.oninput = e => preview.style.fontSize = e.target.value + "px";
 
-Lo encuentran
-
-Pero no vuelve
-
-
-¿Por qué?`;
-preview.innerHTML = editor.innerHTML;
+// NEGRITA
+function toggleBold() {
+  preview.style.fontWeight =
+    preview.style.fontWeight === "bold" ? "normal" : "bold";
 }
 
-function plantilla2() {
-editor.innerHTML = `No es un QR
+// FONDO
+zoom.oninput = e => hero.style.backgroundSize = e.target.value + "%";
+bgY.oninput = e => hero.style.backgroundPosition = "center " + e.target.value + "%";
 
-Es su forma de volver a casa 🐾`;
-preview.innerHTML = editor.innerHTML;
+// IMAGEN
+imgUpload.onchange = e => {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    hero.style.backgroundImage = `url(${ev.target.result})`;
+    localStorage.setItem("bg", ev.target.result);
+  };
+  reader.readAsDataURL(e.target.files[0]);
+};
+
+// LOGO
+logoUpload.onchange = e => {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    logo.src = ev.target.result;
+    localStorage.setItem("logo", ev.target.result);
+  };
+  reader.readAsDataURL(e.target.files[0]);
+};
+
+logoSize.oninput = e => {
+  logo.style.maxWidth = e.target.value + "px";
+};
+
+// DRAG TEXTO
+let drag = false;
+
+preview.onmousedown = () => drag = true;
+document.onmouseup = () => drag = false;
+
+document.onmousemove = e => {
+  if (!drag) return;
+  preview.style.left = e.clientX + "px";
+  preview.style.top = e.clientY + "px";
+  preview.style.transform = "none";
+};
+
+// EXPORTAR IMAGEN 🔥
+function descargar() {
+  html2canvas(document.getElementById("canvas")).then(canvas => {
+    const link = document.createElement("a");
+    link.download = "ubipet.png";
+    link.href = canvas.toDataURL();
+    link.click();
+  });
 }
 
 // GUARDAR
 function guardar() {
   localStorage.setItem("text", editor.innerHTML);
-  localStorage.setItem("posX", preview.style.left);
-  localStorage.setItem("posY", preview.style.top);
 }
 
 // CARGAR
@@ -179,67 +222,15 @@ window.onload = () => {
   const bg = localStorage.getItem("bg");
   if (bg) hero.style.backgroundImage = `url(${bg})`;
 
-  const x = localStorage.getItem("posX");
-  const y = localStorage.getItem("posY");
-
-  if (x && y) {
-    preview.style.left = x;
-    preview.style.top = y;
-    preview.style.transform = "none";
-  }
+  const lg = localStorage.getItem("logo");
+  if (lg) logo.src = lg;
 };
 
 // LIMPIAR
 function limpiar() {
-  if(confirm("¿Borrar todo?")) {
-    preview.innerHTML = "";
-    editor.innerHTML = "";
-    localStorage.clear();
-  }
+  localStorage.clear();
+  location.reload();
 }
-
-// IMAGEN
-imgUpload.addEventListener("change", e => {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-
-  reader.onload = ev => {
-    hero.style.backgroundImage = `url(${ev.target.result})`;
-    localStorage.setItem("bg", ev.target.result);
-  };
-
-  reader.readAsDataURL(file);
-});
-
-// DRAG (MOUSE + TOUCH FIX 🔥)
-let isDragging = false;
-
-function startDrag(e) {
-  isDragging = true;
-}
-
-function stopDrag() {
-  isDragging = false;
-}
-
-function moveDrag(e) {
-  if (!isDragging) return;
-
-  let x = e.clientX || e.touches[0].clientX;
-  let y = e.clientY || e.touches[0].clientY;
-
-  preview.style.left = x + "px";
-  preview.style.top = y + "px";
-  preview.style.transform = "none";
-}
-
-preview.addEventListener("mousedown", startDrag);
-document.addEventListener("mouseup", stopDrag);
-document.addEventListener("mousemove", moveDrag);
-
-preview.addEventListener("touchstart", startDrag);
-document.addEventListener("touchend", stopDrag);
-document.addEventListener("touchmove", moveDrag);
 
 </script>
 
