@@ -22,32 +22,44 @@ body {
   overflow: hidden;
 }
 
-/* FONDO */
+/* FONDO BASE (BRANDEADO 🔥) */
 .hero {
   width: 100%;
   height: 100%;
+  position: relative;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   background-size: cover;
   background-position: center;
+}
+
+/* OVERLAY PARA TEXTO */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
 }
 
 /* TEXTO */
 #preview {
   position: absolute;
+  z-index: 2;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
   text-align: center;
-  cursor: grab;
   max-width: 85%;
-  line-height: 1.5;
   font-size: 28px;
+  line-height: 1.5;
   text-shadow: 0 3px 12px rgba(0,0,0,0.9);
+  cursor: grab;
 }
 
 /* LOGO */
 #logo {
   position: absolute;
+  z-index: 2;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
@@ -98,7 +110,7 @@ input, button {
 <div id="canvas">
   <div class="hero" id="hero"></div>
   <div id="preview"></div>
-  <img id="logo">
+  <img id="logo" src="img/logo.png">
 </div>
 
 <button class="toggle" onclick="toggle()">⚙️</button>
@@ -114,14 +126,12 @@ input, button {
 
 <button onclick="toggleBold()">Negrita</button>
 
-<label>Zoom fondo</label>
+<label>Zoom imagen</label>
 <input type="range" min="100" max="200" value="100" id="zoom">
 
-<label>Posición fondo</label>
+<label>Posición imagen</label>
 <input type="range" min="0" max="100" value="50" id="bgY">
 
-<h4>Logo</h4>
-<input type="file" id="logoUpload">
 <label>Tamaño logo</label>
 <input type="range" min="50" max="300" value="120" id="logoSize">
 
@@ -149,20 +159,19 @@ function toggle() {
 // TEXTO
 editor.oninput = () => preview.innerHTML = editor.innerHTML;
 
-// TAMAÑO TEXTO
+// TEXTO STYLE
 fontSize.oninput = e => preview.style.fontSize = e.target.value + "px";
 
-// NEGRITA
 function toggleBold() {
   preview.style.fontWeight =
     preview.style.fontWeight === "bold" ? "normal" : "bold";
 }
 
-// FONDO
+// IMAGEN CONTROL
 zoom.oninput = e => hero.style.backgroundSize = e.target.value + "%";
 bgY.oninput = e => hero.style.backgroundPosition = "center " + e.target.value + "%";
 
-// IMAGEN
+// IMAGEN UPLOAD
 imgUpload.onchange = e => {
   const reader = new FileReader();
   reader.onload = ev => {
@@ -172,34 +181,42 @@ imgUpload.onchange = e => {
   reader.readAsDataURL(e.target.files[0]);
 };
 
-// LOGO
-logoUpload.onchange = e => {
-  const reader = new FileReader();
-  reader.onload = ev => {
-    logo.src = ev.target.result;
-    localStorage.setItem("logo", ev.target.result);
-  };
-  reader.readAsDataURL(e.target.files[0]);
-};
+// LOGO SIZE
+logoSize.oninput = e => logo.style.maxWidth = e.target.value + "px";
 
-logoSize.oninput = e => {
-  logo.style.maxWidth = e.target.value + "px";
-};
+// DRAG
+let offsetX = 0, offsetY = 0, dragging = false;
 
-// DRAG TEXTO
-let drag = false;
+function startDrag(e) {
+  dragging = true;
+  const rect = preview.getBoundingClientRect();
 
-preview.onmousedown = () => drag = true;
-document.onmouseup = () => drag = false;
+  offsetX = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  offsetY = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+}
 
-document.onmousemove = e => {
-  if (!drag) return;
-  preview.style.left = e.clientX + "px";
-  preview.style.top = e.clientY + "px";
+function moveDrag(e) {
+  if (!dragging) return;
+
+  const x = (e.touches ? e.touches[0].clientX : e.clientX) - offsetX;
+  const y = (e.touches ? e.touches[0].clientY : e.clientY) - offsetY;
+
+  preview.style.left = x + "px";
+  preview.style.top = y + "px";
   preview.style.transform = "none";
-};
+}
 
-// EXPORTAR IMAGEN 🔥
+function stopDrag() { dragging = false; }
+
+preview.addEventListener("mousedown", startDrag);
+document.addEventListener("mousemove", moveDrag);
+document.addEventListener("mouseup", stopDrag);
+
+preview.addEventListener("touchstart", startDrag);
+document.addEventListener("touchmove", moveDrag);
+document.addEventListener("touchend", stopDrag);
+
+// EXPORTAR
 function descargar() {
   html2canvas(document.getElementById("canvas")).then(canvas => {
     const link = document.createElement("a");
@@ -209,21 +226,17 @@ function descargar() {
   });
 }
 
-// GUARDAR
+// GUARDAR / CARGAR
 function guardar() {
   localStorage.setItem("text", editor.innerHTML);
 }
 
-// CARGAR
 window.onload = () => {
   preview.innerHTML = localStorage.getItem("text") || "";
   editor.innerHTML = preview.innerHTML;
 
   const bg = localStorage.getItem("bg");
   if (bg) hero.style.backgroundImage = `url(${bg})`;
-
-  const lg = localStorage.getItem("logo");
-  if (lg) logo.src = lg;
 };
 
 // LIMPIAR
