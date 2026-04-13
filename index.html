@@ -28,12 +28,10 @@ body {
   height: 100%;
   position: relative;
   overflow: hidden;
-
-  /* Gradiente base UbiPet */
   background: linear-gradient(135deg, #00c6a7, #007cf0);
 }
 
-/* IMAGEN PRINCIPAL */
+/* IMÁGENES */
 .hero img.main-img {
   position: absolute;
   width: 100%;
@@ -42,12 +40,10 @@ body {
   z-index: 1;
 }
 
-/* CUANDO ES VERTICAL */
 .hero.vertical img.main-img {
   object-fit: cover;
 }
 
-/* FONDO BLUR */
 .hero img.bg-blur {
   position: absolute;
   width: 110%;
@@ -103,6 +99,7 @@ body {
   transition: 0.3s;
   padding: 10px;
   overflow-y: auto;
+  z-index: 1000;
 }
 
 .panel.open { right: 0; }
@@ -111,7 +108,7 @@ body {
   position: fixed;
   top: 10px;
   right: 10px;
-  z-index: 999;
+  z-index: 1100;
 }
 
 /* EDITOR */
@@ -159,7 +156,7 @@ input, button {
 <label>Tamaño logo</label>
 <input type="range" min="50" max="300" value="120" id="logoSize">
 
-<input type="file" id="imgUpload">
+<input type="file" id="imgUpload" accept="image/*">
 
 <button onclick="descargar()">📸 Descargar imagen</button>
 
@@ -170,12 +167,19 @@ input, button {
 
 <script>
 
+// ELEMENTOS
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
 const hero = document.getElementById("hero");
 const logo = document.getElementById("logo");
 const mainImg = document.getElementById("mainImg");
 const bgBlur = document.getElementById("bgBlur");
+const panel = document.getElementById("panel");
+
+// DEBUG
+window.onerror = function (msg, url, line) {
+  console.log("Error:", msg, "línea:", line);
+};
 
 // PANEL
 function toggle() {
@@ -193,8 +197,11 @@ function toggleBold() {
     preview.style.fontWeight === "bold" ? "normal" : "bold";
 }
 
-// SUBIR IMAGEN INTELIGENTE
+// IMAGEN INTELIGENTE
 imgUpload.onchange = e => {
+  const file = e.target.files[0];
+  if (!file) return;
+
   const reader = new FileReader();
 
   reader.onload = ev => {
@@ -202,7 +209,6 @@ imgUpload.onchange = e => {
 
     mainImg.src = src;
     bgBlur.src = src;
-
     mainImg.style.display = "block";
 
     mainImg.onload = () => {
@@ -220,31 +226,33 @@ imgUpload.onchange = e => {
     localStorage.setItem("bg", src);
   };
 
-  reader.readAsDataURL(e.target.files[0]);
+  reader.readAsDataURL(file);
 };
 
 // LOGO SIZE
 logoSize.oninput = e => logo.style.maxWidth = e.target.value + "px";
 
-// DRAG TEXTO
+// DRAG TEXTO (MEJORADO MÓVIL)
 let offsetX = 0, offsetY = 0, dragging = false;
 
 function startDrag(e) {
   dragging = true;
   const rect = preview.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-  offsetX = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-  offsetY = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+  offsetX = clientX - rect.left;
+  offsetY = clientY - rect.top;
 }
 
 function moveDrag(e) {
   if (!dragging) return;
 
-  const x = (e.touches ? e.touches[0].clientX : e.clientX) - offsetX;
-  const y = (e.touches ? e.touches[0].clientY : e.clientY) - offsetY;
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-  preview.style.left = x + "px";
-  preview.style.top = y + "px";
+  preview.style.left = (clientX - offsetX) + "px";
+  preview.style.top = (clientY - offsetY) + "px";
   preview.style.transform = "none";
 }
 
@@ -254,8 +262,8 @@ preview.addEventListener("mousedown", startDrag);
 document.addEventListener("mousemove", moveDrag);
 document.addEventListener("mouseup", stopDrag);
 
-preview.addEventListener("touchstart", startDrag);
-document.addEventListener("touchmove", moveDrag);
+preview.addEventListener("touchstart", startDrag, { passive: true });
+document.addEventListener("touchmove", moveDrag, { passive: true });
 document.addEventListener("touchend", stopDrag);
 
 // EXPORTAR
@@ -263,7 +271,7 @@ function descargar() {
   html2canvas(document.getElementById("canvas")).then(canvas => {
     const link = document.createElement("a");
     link.download = "ubipet.png";
-    link.href = canvas.toDataURL();
+    link.href = canvas.toDataURL("image/png");
     link.click();
   });
 }
