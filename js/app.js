@@ -71,7 +71,13 @@ window.doLogout = doLogout
 document.addEventListener('DOMContentLoaded', () => {
   initTheme()
   initAuth()
-  document.body.classList.add('ready')
+  // Esperar CSS antes de mostrar
+  if (document.body.classList.contains('css-ready')) {
+    document.body.classList.add('ready')
+  } else {
+    document.querySelector('link[rel=stylesheet]').addEventListener('load', () => document.body.classList.add('ready'))
+    setTimeout(() => document.body.classList.add('ready'), 500) // fallback
+  }
 })
 
 // ── LOGIN EVENT ──
