@@ -71,4 +71,8 @@ window.doLogout = doLogout
 document.addEventListener('DOMContentLoaded', () => {
   initTheme()
   initAuth()
+  document.body.classList.add('ready')
 })
+
+// ── LOGIN EVENT ──
+window.addEventListener('ubipet:login', e => launchApp(e.detail))

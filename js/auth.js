@@ -1,7 +1,6 @@
 // js/auth.js — Autenticación UbiPet 2.0
 import { supabase } from './supabase.js'
 import { state, showToast, initTheme } from './utils.js'
-import { launchApp } from './app.js'
 
 // ── RENDER AUTH ──
 function renderAuth() {
@@ -142,7 +141,7 @@ async function boot(user) {
 
   state.isAdmin = !!(adminData?.activo)
 
-  launchApp(user)
+  window.dispatchEvent(new CustomEvent('ubipet:login', { detail: user }))
 }
 
 // ── INIT AUTH ──
